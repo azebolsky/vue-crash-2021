@@ -1,6 +1,9 @@
 <template>
   <div class="container">
-    <Header title="Task Tracker" />
+    <Header @toggle-add-task="toggleAddTask" title="Task Tracker" :showAddTask="showAddTasks" />
+    <div v-if="showAddTasks">
+      <AddTask @add-task="addTask" />
+    </div>
     <Tasks @toggle-reminder="toggleReminder" @delete-task="deleteTask" :tasks="tasks" />
   </div>
 </template>
@@ -8,20 +11,29 @@
 <script>
 import Header from "./components/Header";
 import Tasks from "./components/Tasks";
+import AddTask from "./components/AddTask";
 
 export default {
   name: "App",
   components: {
     Header,
-    Tasks
+    Tasks,
+    AddTask
   },
   // data is a function
   data() {
     return {
-      tasks: []
+      tasks: [],
+      showAddTasks: false
     };
   },
   methods: {
+    toggleAddTask() {
+      this.showAddTasks = !this.showAddTasks;
+    },
+    addTask(newTask) {
+      this.tasks = [...this.tasks, newTask];
+    },
     deleteTask(id) {
       if (confirm("Are you sure?")) {
         this.tasks = this.tasks.filter(task => task.id !== id);
@@ -37,20 +49,20 @@ export default {
     this.tasks = [
       {
         id: 1,
-        name: "Adam",
-        action: "Say hi",
+        text: "Adam",
+        day: "March 1st at 2:30pm",
         reminder: true
       },
       {
         id: 2,
-        name: "Sammie",
-        action: "Pet",
+        text: "Sammie",
+        day: "March 3rd at 2:30pm",
         reminder: true
       },
       {
         id: 3,
-        name: "Ripley",
-        action: "scratch",
+        text: "Ripley",
+        day: "March 4th at 2:30pm",
         reminder: false
       }
     ];

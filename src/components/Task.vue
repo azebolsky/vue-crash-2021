@@ -4,10 +4,10 @@
     :class="[task.reminder ? 'reminder' : '', 'task']"
   >
     <h3>
-      {{ task.name }}
+      {{ task.text }}
       <i @click="$emit('delete-task', task.id)" class="fas fa-times"></i>
     </h3>
-    <h3>{{ task.action }}</h3>
+    <h3>{{ task.day }}</h3>
   </div>
 </template>
 
