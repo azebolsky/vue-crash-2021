@@ -1,10 +1,18 @@
 <template>
   <div class="container">
-    <Header @toggle-add-task="toggleAddTask" title="Task Tracker" :showAddTask="showAddTasks" />
+    <Header
+      @toggle-add-task="toggleAddTask"
+      title="Task Tracker"
+      :showAddTask="showAddTasks"
+    />
     <div v-if="showAddTasks">
       <AddTask @add-task="addTask" />
     </div>
-    <Tasks @toggle-reminder="toggleReminder" @delete-task="deleteTask" :tasks="tasks" />
+    <Tasks
+      @toggle-reminder="toggleReminder"
+      @delete-task="deleteTask"
+      :tasks="tasks"
+    />
   </div>
 </template>
 
@@ -18,13 +26,13 @@ export default {
   components: {
     Header,
     Tasks,
-    AddTask
+    AddTask,
   },
   // data is a function
   data() {
     return {
       tasks: [],
-      showAddTasks: false
+      showAddTasks: false,
     };
   },
   methods: {
@@ -36,37 +44,23 @@ export default {
     },
     deleteTask(id) {
       if (confirm("Are you sure?")) {
-        this.tasks = this.tasks.filter(task => task.id !== id);
+        this.tasks = this.tasks.filter((task) => task.id !== id);
       }
     },
     toggleReminder(id) {
-      this.tasks = this.tasks.map(task =>
+      this.tasks = this.tasks.map((task) =>
         task.id === id ? { ...task, reminder: !task.reminder } : task
       );
-    }
+    },
+    async fetchTasks() {
+      const res = await fetch("http://localhost:5000/tasks");
+      const data = await res.json();
+      return data;
+    },
   },
-  created() {
-    this.tasks = [
-      {
-        id: 1,
-        text: "Adam",
-        day: "March 1st at 2:30pm",
-        reminder: true
-      },
-      {
-        id: 2,
-        text: "Sammie",
-        day: "March 3rd at 2:30pm",
-        reminder: true
-      },
-      {
-        id: 3,
-        text: "Ripley",
-        day: "March 4th at 2:30pm",
-        reminder: false
-      }
-    ];
-  }
+  async created() {
+    this.tasks = await this.fetchTasks();
+  },
 };
 </script>
 
