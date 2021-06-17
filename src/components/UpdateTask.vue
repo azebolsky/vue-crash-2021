@@ -3,53 +3,46 @@
     <div class="form-control">
       <label>Task</label>
       <!-- v-model binds inputs with data -->
-      <input type="text" name="text" v-model="text" placeholder="Add Task" />
+      <input
+        type="text"
+        name="text"
+        v-text="text"
+        v-model="text"
+        placeholder="Add Task"
+      />
     </div>
     <div class="form-control">
       <label>Day and Time</label>
       <input
         type="text"
         name="day"
+        v-text="day"
         v-model="day"
         placeholder="Add Day and Time"
       />
     </div>
     <div class="form-control">
       <label>Set Reminder</label>
-      <input type="checkbox" name="reminder" v-model="reminder" />
+      <input
+        type="checkbox"
+        name="reminder"
+        v-text="reminder"
+        v-model="reminder"
+      />
     </div>
-    <input type="submit" value="Save Task" class="btn btn-block" />
+    <input type="submit" value="Update Task" class="btn btn-block" />
   </form>
 </template>
 
 <script>
 export default {
-  name: "AddTask",
+  name: UpdateTask,
   data() {
     return {
-      text: "",
-      day: "",
-      reminder: false,
+      text: this.text,
+      day: this.day,
+      reminder: this.reminder,
     };
-  },
-  methods: {
-    onSubmit(e) {
-      e.preventDefault();
-      if (!this.text) {
-        alert("Please add a task!");
-        return;
-      }
-      const newTask = {
-        // id: Math.floor(Math.random() * 100000),
-        text: this.text,
-        day: this.day,
-        reminder: this.reminder,
-      };
-      this.$emit("add-task", newTask),
-        (this.text = ""),
-        (this.day = ""),
-        (this.reminder = false);
-    },
   },
 };
 </script>

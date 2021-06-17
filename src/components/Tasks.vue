@@ -4,6 +4,7 @@
       <Task
         @toggle-reminder="$emit('toggle-reminder', task.id)"
         @delete-task="$emit('delete-task', task.id)"
+        @update-task="$emit('update-task', task.id)"
         :task="task"
       />
     </div>
@@ -16,11 +17,11 @@ import Task from "./Task";
 export default {
   name: "Tasks",
   props: {
-    tasks: Array
+    tasks: Array,
   },
   components: {
-    Task
+    Task,
   },
-  emits: ["delete-task", "toggle-reminder"]
+  emits: ["delete-task", "toggle-reminder"],
 };
 </script>

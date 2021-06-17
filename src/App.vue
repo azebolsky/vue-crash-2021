@@ -11,6 +11,7 @@
     <Tasks
       @toggle-reminder="toggleReminder"
       @delete-task="deleteTask"
+      @update-task="updateTask"
       :tasks="tasks"
     />
   </div>
@@ -39,21 +40,60 @@ export default {
     toggleAddTask() {
       this.showAddTasks = !this.showAddTasks;
     },
-    addTask(newTask) {
-      this.tasks = [...this.tasks, newTask];
+    async updateTask(updatedTask) {
+      const res = await fetch("api/tasks", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedTask),
+      });
+      const data = res.json();
+      console.log(data);
     },
-    deleteTask(id) {
+    async addTask(newTask) {
+      const res = await fetch("api/tasks", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newTask),
+      });
+      const data = await res.json();
+      this.tasks = [...this.tasks, data];
+    },
+    async deleteTask(id) {
       if (confirm("Are you sure?")) {
-        this.tasks = this.tasks.filter((task) => task.id !== id);
+        const res = await fetch(`api/tasks/${id}`, {
+          method: "DELETE",
+        });
+        res.status === 200
+          ? this.tasks.filter((this.tasks = (task) => task.id !== id))
+          : alert("error deleting task");
       }
     },
-    toggleReminder(id) {
+    async toggleReminder(id) {
+      const taskToToggle = await this.fetchTask(id);
+      const updateTask = { ...taskToToggle, reminder: !taskToToggle.reminder };
+      const res = await fetch(`api/tasks/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updateTask),
+      });
+      const data = await res.json();
       this.tasks = this.tasks.map((task) =>
-        task.id === id ? { ...task, reminder: !task.reminder } : task
+        task.id === id ? { ...task, reminder: data.reminder } : task
       );
     },
     async fetchTasks() {
-      const res = await fetch("http://localhost:5000/tasks");
+      const res = await fetch("api/tasks");
+      const data = await res.json();
+      return data;
+    },
+    async fetchTask(id) {
+      const res = await fetch(`api/tasks/${id}`);
       const data = await res.json();
       return data;
     },
